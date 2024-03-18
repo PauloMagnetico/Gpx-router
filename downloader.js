@@ -21,11 +21,11 @@ const CP3 = {
     latitude: 45.53826622035537
 }
 
-const startLongitude = CP2.longitude;
-const startLatitude = CP2.latitude;
+const startLongitude = CP1.longitude;
+const startLatitude = CP1.latitude;
 
-const endLongitude = CP3.longitude;
-const endLatitude = CP3.latitude;
+const endLongitude = CP2.longitude;
+const endLatitude = CP2.latitude;
 
 async function downloadGPXFile(url, outputPath) {
     try {
