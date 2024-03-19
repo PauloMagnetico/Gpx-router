@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Download GPX File</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
+
 <body>
     <script>
-        async function downloadGPXFile(url) {
+        let profileId = 'fastbike-asia-pacific'
+
+        async function downloadGPXFile(startLatitude, startLongitude, endLatitude, endLongitude) {
+            console.log(profileId)
+            const url = `https://bikerouter.de/brouter-engine/brouter?lonlats=${startLongitude},${startLatitude}|${endLongitude},${endLatitude}&profile=${profileId}&alternativeidx=0&format=gpx`;
+
             try {
                 const response = await axios.get(url, { responseType: 'blob' });
                 const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
@@ -24,11 +31,6 @@
                 console.error(`An error occurred: ${error.message}`);
             }
         }
-        const startLongitude = 6.325962;
-        const startLatitude = 45.963084;
-        const endLongitude = 5.5494965842940385;
-        const endLatitude = 44.288420831829306;
-        const fileURL = `https://bikerouter.de/brouter-engine/brouter?lonlats=${startLongitude},${startLatitude}|${endLongitude},${endLatitude}&profile=fastbike-asia-pacific&alternativeidx=0&format=gpx`;
 
         async function uploadProfile() {
             try {
@@ -38,25 +40,51 @@
                 // Use axios to get the file content
                 const response = await axios.get(configFile);
                 const fileContent = response.data;
-                console.log("File content:", fileContent);
-
                 // Now use fileContent as the body of your POST request
-                // const postResponse = await axios.post('YOUR_ENDPOINT_URL', fileContent, {
-                //     headers: {
-                //         'Content-Type': 'text/plain', // Ensure this is the correct content type for your needs
-                //     }
-                // });
+                const url = 'https://brouter.de/brouter/profile';
+
+                const postResponse = await axios.post(url, fileContent, {
+                    headers: {
+                        'Content-Type': 'text/plain;charset=UTF-8',
+                    }
+
+                });
 
                 // // Handle the response from your POST request
-                // console.log(postResponse.data);
+                profileId = postResponse.data.profileid;
+                console.log('uploaded profile', profileId);
             } catch (error) {
                 // Error handling for both GET and POST requests
                 console.error('Request failed', error);
             }
         };
 
+        function handleSubmit() {
+            event.preventDefault();
+            const startLongitude = event.target.startLongitude.value;;
+            const startLatitude = event.target.startLatitude.value;
+            const endLongitude = event.target.endLongitude.value;
+            const endLatitude = event.target.endLatitude.value;
+            downloadGPXFile(startLatitude, startLongitude, endLatitude, endLongitude);
+        }
+
     </script>
-    <button onclick="downloadGPXFile(fileURL);">Download GPX File</button>
-    <button onclick ="uploadProfile()">Upload Config</button>
+    <button onclick="uploadProfile()">Upload Config</button>
+    <form id="gpxForm" onsubmit="handleSubmit(event)">
+        <div>
+            <label for="startLatitude">startLatitude</label>
+            <input name="startLatitude" type="number" id="startLatitude" value=45.963084>
+            <label for="startLongitude">startLongitude</label>
+            <input name="startLongitude" type="number" id="startLongitude" value=6.325962>
+        </div>
+        <div>
+            <label for="endLatitude">endLatitude</label>
+            <input name="endLatitude" type="number" id="endLatitude" value=44.288420831829306>
+            <label for="endLongitude">endLongitude</label>
+            <input name="endLongitude" type="number" id="endLongitude" value=5.5494965842940385>
+        </div>
+        <button type="submit">Download GPX File</button>
+    </form>
 </body>
+
 </html>
