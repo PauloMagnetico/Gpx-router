@@ -9,12 +9,14 @@
 
 <body>
     <script>
-        let profileId = 'fastbike-asia-pacific'
+        // let profileId = 'fastbike-asia-pacific'
+        let profileId = 'trekking'
 
         async function downloadGPXFile(startLatitude, startLongitude, endLatitude, endLongitude) {
             console.log(profileId)
-            const url = `https://bikerouter.de/brouter-engine/brouter?lonlats=${startLongitude},${startLatitude}|${endLongitude},${endLatitude}&profile=${profileId}&alternativeidx=0&format=gpx`;
-
+            //const url = `https://bikerouter.de/brouter-engine/brouter?lonlats=${startLongitude},${startLatitude}|${endLongitude},${endLatitude}&profile=${profileId}&alternativeidx=0&format=gpx`;
+            const url = `https://brouter.m11n.de/brouter-engine/brouter?lonlats=${startLongitude},${startLatitude}|${endLongitude},${endLatitude}&profile=${profileId}&alternativeidx=0&format=gpx`;
+        
             try {
                 const response = await axios.get(url, { responseType: 'blob' });
                 const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
@@ -41,7 +43,9 @@
                 const response = await axios.get(configFile);
                 const fileContent = response.data;
                 // Now use fileContent as the body of your POST request
-                const url = 'https://brouter.de/brouter/profile';
+                // const url = 'https://brouter.de/brouter/profile';
+                const url = 'https://brouter.m11n.de/brouter-engine/brouter/profile'
+
 
                 const postResponse = await axios.post(url, fileContent, {
                     headers: {
@@ -52,7 +56,7 @@
 
                 // // Handle the response from your POST request
                 profileId = postResponse.data.profileid;
-                console.log('uploaded profile', profileId);
+                console.log('uploaded profile:', profileId);
             } catch (error) {
                 // Error handling for both GET and POST requests
                 console.error('Request failed', error);
