@@ -8,8 +8,11 @@ App that uses the brouter backend to have a predefined profile used on the go. F
 - export GPX
 
 ## TODO
+- [x] User user can upload a custom profile
+- [x] User can select coordinates
+- [x] User can download a gpx file
 - [ ] Add Status bar that shows the upload 
 - [ ] Automate uploading of the profile
-- [ ] Allow the use of the location as starting coords
+- [x] Allow the use of the location as starting coords
 - [ ] Tweak profile for ultraracing
 - [ ] Add some styling to make it mobile friendly

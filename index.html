@@ -9,20 +9,37 @@
 
 <body>
     <script>
+        const getCoords = () => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // Success callback
+                    document.getElementById('startLatitude').value = position.coords.latitude;
+                    document.getElementById('startLongitude').value = position.coords.longitude;
+                },
+                (error) => {
+                    // Error callback
+                    console.error("Error obtaining location", error);
+                }
+            );
+        };
+
         // let profileId = 'fastbike-asia-pacific'
         let profileId = 'trekking'
 
-        async function downloadGPXFile(startLatitude, startLongitude, endLatitude, endLongitude) {
-            console.log(profileId)
-            //const url = `https://bikerouter.de/brouter-engine/brouter?lonlats=${startLongitude},${startLatitude}|${endLongitude},${endLatitude}&profile=${profileId}&alternativeidx=0&format=gpx`;
+        const downloadGPXFile = async (
+            startLatitude, 
+            startLongitude, 
+            endLatitude, 
+            endLongitude) => {
+
             const url = `https://brouter.m11n.de/brouter-engine/brouter?lonlats=${startLongitude},${startLatitude}|${endLongitude},${endLatitude}&profile=${profileId}&alternativeidx=0&format=gpx`;
-        
+
             try {
                 const response = await axios.get(url, { responseType: 'blob' });
                 const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = blobUrl;
-                link.setAttribute('download', 'route.gpx'); // Specify the file name
+                link.setAttribute('download', 'route.gpx');
                 document.body.appendChild(link);
                 link.click();
 
@@ -34,7 +51,7 @@
             }
         }
 
-        async function uploadProfile() {
+        const uploadProfile = async () => {
             try {
                 //load the brouter config file
                 const configFile = 'profile.brf';
@@ -51,7 +68,6 @@
                     headers: {
                         'Content-Type': 'text/plain;charset=UTF-8',
                     }
-
                 });
 
                 // // Handle the response from your POST request
@@ -74,6 +90,7 @@
 
     </script>
     <button onclick="uploadProfile()">Upload Config</button>
+    <button onclick="getCoords()">Use Location</button>
     <form id="gpxForm" onsubmit="handleSubmit(event)">
         <div>
             <label for="startLatitude">startLatitude</label>
