@@ -8,7 +8,17 @@
 </head>
 
 <body>
-    <script>
+    <script> 
+        const startParcoursEnd = {
+            "latitude": 48.28063677710164,
+            "longitude": 16.33373834894661
+        }
+
+        const endParcoursStart = {
+            "latitude": 48.15104044429997,
+            "longitude": 16.49943266563155
+        }
+
         const getCoords = () => {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -23,13 +33,23 @@
             );
         };
 
+        const setDestination = (latitude, longitude) => {
+            document.getElementById('endLatitude').value = latitude;
+            document.getElementById('endLongitude').value = longitude;
+        }
+
+        const setOrigin = (latitude, longitude) => {
+            document.getElementById('startLatitude').value = latitude;
+            document.getElementById('startLongitude').value = longitude;
+        }
+
         // let profileId = 'fastbike-asia-pacific'
         let profileId = 'trekking'
 
         const downloadGPXFile = async (
-            startLatitude, 
-            startLongitude, 
-            endLatitude, 
+            startLatitude,
+            startLongitude,
+            endLatitude,
             endLongitude) => {
 
             const url = `https://brouter.m11n.de/brouter-engine/brouter?lonlats=${startLongitude},${startLatitude}|${endLongitude},${endLatitude}&profile=${profileId}&alternativeidx=0&format=gpx`;
@@ -79,7 +99,7 @@
             }
         };
 
-        function handleSubmit() {
+        const handleSubmit = () => {
             event.preventDefault();
             const startLongitude = event.target.startLongitude.value;;
             const startLatitude = event.target.startLatitude.value;
@@ -91,6 +111,8 @@
     </script>
     <button onclick="uploadProfile()">Upload Config</button>
     <button onclick="getCoords()">Use Location</button>
+    <button onclick="setDestination(endParcoursStart.latitude, endParcoursStart.longitude)">ToEndParcours</button>
+    <button onclick="setOrigin(startParcoursEnd.latitude, startParcoursEnd.longitude)">FromStartParcours</button>
     <form id="gpxForm" onsubmit="handleSubmit(event)">
         <div>
             <label for="startLatitude">startLatitude</label>
